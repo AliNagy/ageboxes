@@ -7,35 +7,41 @@
       <label for="year">Year</label>
       <input type="number" min="1900" v-model="dates.birth.year" name="year" />
       <label for="month">Month</label>
-      <input type="number" min="1" max="12" v-model="dates.birth.month" name="month" />
+      <input
+        type="number"
+        min="1"
+        max="12"
+        v-model="dates.birth.month"
+        name="month"
+      />
       <label for="day">Day</label>
-      <input type="number" min="1" max="31" v-model="dates.birth.day" name="day" />
+      <input
+        type="number"
+        min="1"
+        max="31"
+        v-model="dates.birth.day"
+        name="day"
+      />
     </div>
     <div class="btn-container no-print">
       <button class="btn" @click="renderBlocks">
         Calculate
       </button>
+      <button class="btn" @click="printResults">
+        Print
+      </button>
     </div>
-    <table>
+    <table ref="results">
       <tr>
-        <th
-          style="width: 10px; height:5px"
-          v-for="i in boxes.width + 1"
-          :key="i"
-        >
+        <th v-for="i in boxes.width + 1" :key="i">
           {{ i - 1 }}
         </th>
       </tr>
-      <tr style="width: 10px; height:5px" v-for="i in boxes.height" :key="i">
+      <tr v-for="i in boxes.height" :key="i">
         <th>
           {{ i }}
         </th>
-        <td
-          style="width: 10px; height:5px"
-          v-for="j in boxes.width"
-          :key="j"
-          :ref="`${i},${j}`"
-        >
+        <td v-for="j in boxes.width" :key="j" :ref="`${i},${j}`">
           &#x2610;
         </td>
       </tr>
@@ -44,8 +50,23 @@
 </template>
 
 <script>
+import html2pdf from "html2pdf.js";
+
 export default {
   methods: {
+    printResults: function() {
+      var opt = {
+        filename: "myfile.pdf",
+        pagebreak: { mode: ["avoid-all"] },
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: { scale: 1 },
+        jsPDF: { unit: "in", format: "a4", orientation: "l" },
+      };
+      html2pdf()
+        .set(opt)
+        .from(this.$refs.results)
+        .save();
+    },
     weeksBetween: function(week1, week2) {
       return Math.round((week1 - week2) / (7 * 24 * 60 * 60 * 1000));
     },
@@ -69,7 +90,7 @@ export default {
           this.dates.birth.year,
           this.dates.birth.month,
           this.dates.birth.day
-        )   
+        )
       );
       let years = Math.floor(weeks / 52);
       let remainderWeeks = weeks % 52;
