@@ -5,11 +5,11 @@
         Birthdate
       </div>
       <label for="year">Year</label>
-      <input type="number" v-model="dates.birth.year" name="year" />
+      <input type="number" min="1900" v-model="dates.birth.year" name="year" />
       <label for="month">Month</label>
-      <input type="number" v-model="dates.birth.month" name="month" />
+      <input type="number" min="1" max="12" v-model="dates.birth.month" name="month" />
       <label for="day">Day</label>
-      <input type="number" v-model="dates.birth.day" name="day" />
+      <input type="number" min="1" max="31" v-model="dates.birth.day" name="day" />
     </div>
     <div class="btn-container no-print">
       <button class="btn" @click="renderBlocks">
@@ -69,7 +69,7 @@ export default {
           this.dates.birth.year,
           this.dates.birth.month,
           this.dates.birth.day
-        )
+        )   
       );
       let years = Math.floor(weeks / 52);
       let remainderWeeks = weeks % 52;
