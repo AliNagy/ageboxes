@@ -11,17 +11,6 @@
       <label for="day">Day</label>
       <input type="number" v-model="dates.birth.day" name="day" />
     </div>
-    <div class="input-container no-print">
-      <div class="title">
-        Life Expectancy
-      </div>
-      <label for="year">Year</label>
-      <input type="number" v-model="dates.expectancy.year" name="year" />
-      <label for="month">Month</label>
-      <input type="number" v-model="dates.expectancy.month" name="month" />
-      <label for="day">Day</label>
-      <input type="number" v-model="dates.expectancy.day" name="day" />
-    </div>
     <div class="btn-container no-print">
       <button class="btn" @click="renderBlocks">
         Calculate
@@ -46,7 +35,9 @@
           v-for="j in boxes.width"
           :key="j"
           :ref="`${i},${j}`"
-        >&#x2612;</td>
+        >
+          &#x2610;
+        </td>
       </tr>
     </table>
   </div>
@@ -66,78 +57,26 @@ export default {
     clearBoard: function() {
       for (let i = 1; i <= this.boxes.width; i++) {
         for (let j = 1; j <= this.boxes.height; j++) {
-          this.$refs[`${j},${i}`][0].innerHTML = "&#x2612;";
+          this.$refs[`${j},${i}`][0].innerHTML = "&#x2610;";
         }
       }
     },
     renderBlocks: function() {
       this.clearBoard();
-      for (
-        let i = 1;
-        i <=
-        this.weeksBetween(
-          new Date(
-            this.dates.expectancy.year,
-            this.dates.expectancy.month,
-            this.dates.expectancy.day
-          ),
-          new Date(
-            this.dates.birth.year,
-            this.dates.birth.month,
-            this.dates.birth.day
-          )
-        ) %
-          52;
-        i++
-      ) {
-        for (
-          let j = 1;
-          j <=
-          this.yearsBetween(
-            new Date(
-              this.dates.expectancy.year,
-              this.dates.expectancy.month,
-              this.dates.expectancy.day
-            ),
-            new Date(
-              this.dates.birth.year,
-              this.dates.birth.month,
-              this.dates.birth.day
-            )
-          );
-          j++
-        ) {
-          this.$refs[`${j},${i}`][0].innerHTML = "&#x2610;";
-        }
-      }
-      for (
-        let i = 1;
-        i <=
-        this.weeksBetween(
-          new Date(),
-          new Date(
-            this.dates.birth.year,
-            this.dates.birth.month,
-            this.dates.birth.day
-          )
-        ) %
-          52;
-        i++
-      ) {
-        for (
-          let j = 1;
-          j <=
-          this.yearsBetween(
-            new Date(),
-            new Date(
-              this.dates.birth.year,
-              this.dates.birth.month,
-              this.dates.birth.day
-            )
-          );
-          j++
-        ) {
-          this.$refs[`${j},${i}`][0].innerHTML = "&#x25FC;";
+      let weeks = this.weeksBetween(
+        new Date(),
+        new Date(
+          this.dates.birth.year,
+          this.dates.birth.month,
+          this.dates.birth.day
+        )
+      );
+      let years = Math.floor(weeks / 52);
+      let remainderWeeks = weeks % 52;
+      for (let i = 1; i <= years; i++) {
+        let weeksThatYear = i == years ? remainderWeeks : 52;
+        for (let j = 1; j <= weeksThatYear; j++) {
+          this.$refs[`${i},${j}`][0].innerHTML = "&#x25FC;";
         }
       }
     },
@@ -149,11 +88,6 @@ export default {
           month: 3,
           day: 1,
           year: 1996,
-        },
-        expectancy: {
-          month: 1,
-          day: 1,
-          year: 2025,
         },
       },
       boxes: {
