@@ -137,7 +137,7 @@ export default {
           );
           j++
         ) {
-          this.$refs[`${j},${i}`][0].innerHTML = "&#x25A0;";
+          this.$refs[`${j},${i}`][0].innerHTML = "&#x25FC;";
         }
       }
     },
