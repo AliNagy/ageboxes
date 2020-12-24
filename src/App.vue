@@ -46,7 +46,7 @@
           v-for="j in boxes.width"
           :key="j"
           :ref="`${i},${j}`"
-        ></td>
+        >&#x2612;</td>
       </tr>
     </table>
   </div>
@@ -66,7 +66,7 @@ export default {
     clearBoard: function() {
       for (let i = 1; i <= this.boxes.width; i++) {
         for (let j = 1; j <= this.boxes.height; j++) {
-          this.$refs[`${j},${i}`][0].innerHTML = "";
+          this.$refs[`${j},${i}`][0].innerHTML = "&#x2612;";
         }
       }
     },
